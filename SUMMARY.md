@@ -47,6 +47,9 @@
     +   [详解 BiLSTM 及代码实现](docs/%E8%AF%A6%E8%A7%A3-BiLSTM-%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0.md)
     +   [超越ImageNet：谷歌内建300M图像数据集揭露精度与数据的线性增长关系](docs/%E8%B6%85%E8%B6%8AImageNet%EF%BC%9A%E8%B0%B7%E6%AD%8C%E5%86%85%E5%BB%BA300M%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E9%9B%86%E6%8F%AD%E9%9C%B2%E7%B2%BE%E5%BA%A6%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E7%BA%BF%E6%80%A7%E5%A2%9E%E9%95%BF%E5%85%B3%E7%B3%BB.md)
     +   [题目：用于语义分割的全卷积网络](docs/%E9%A2%98%E7%9B%AE%EF%BC%9A%E7%94%A8%E4%BA%8E%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2%E7%9A%84%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C.md)
++   大模型
+    +   [使用（滥用）LLM 压缩文本](docs/DRINK-ME%EF%BC%9A-%28Ab%29Using-a-LLM-to-compress-text.md)
+    +   [模拟人格：控制向量 + 语法](docs/Simulating-Personality%EF%BC%9A-Control-Vectors-%2B-Grammar.md)
 +   Kaggle
     +   [Kaggle word2vec NLP 教程：描述](docs/Kaggle-word2vec-NLP-%E6%95%99%E7%A8%8B%EF%BC%9A%E6%8F%8F%E8%BF%B0.md)
     +   [Kaggle word2vec NLP 教程：第一部分：写给入门者的词袋](docs/Kaggle-word2vec-NLP-%E6%95%99%E7%A8%8B%EF%BC%9A%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9A%E5%86%99%E7%BB%99%E5%85%A5%E9%97%A8%E8%80%85%E7%9A%84%E8%AF%8D%E8%A2%8B.md)
