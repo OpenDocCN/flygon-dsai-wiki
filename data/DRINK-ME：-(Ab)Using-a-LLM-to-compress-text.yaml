@@ -1,0 +1,370 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: 大模型'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：大模型
+- en: 'date: 2024-05-08 10:27:01'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 10:27:01
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: 'DRINK ME: (Ab)Using a LLM to compress text'
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 喝我：（滥用）使用LLM压缩文本
+- en: 来源：[https://o565.com/llm-text-compression/](https://o565.com/llm-text-compression/)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://o565.com/llm-text-compression/](https://o565.com/llm-text-compression/)
+- en: Introduction
+  id: totrans-6
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 介绍
+- en: Large language models are trained on huge datasets of text to learn the relationships
+    and contexts of words within larger documents. These relationships are what allows
+    the model to generate text.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大型语言模型是在大型文本数据集上进行训练的，以学习更大文档中单词的关系和上下文。这些关系是模型生成文本的基础。
+- en: 'Recently I''ve [read](https://www.nytimes.com/2023/12/27/business/media/new-york-times-open-ai-microsoft-lawsuit.html)
+    concerns about LLMs being trained on copyrighted text and [reproducing](https://www.patronus.ai/press)
+    it. This got me thinking: Can training text be extracted from an LLM? The answer,
+    of course, is yes, and this [isn''t](https://arxiv.org/abs/2311.17035) a [new](https://arxiv.org/abs/2012.07805)
+    (or open) question. This led me to wonder what it would take to extract entire
+    books- or have an LLM reproduce text it''s never directly been trained on. I figured
+    that, for the most part, many texts contain sections that would naturally align
+    with the language relationships the model has learned. If that''s the case, then
+    perhaps I could use the model to infer those relationships and correct its course
+    whenever it deviates.'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最近，我读到了关于LLMs被训练在受版权保护的文本上并将其复制的担忧。这让我想：可以从LLM中提取训练文本吗？答案当然是肯定的，而且这不是一个新的（或开放的）问题。这让我想知道提取整本书需要什么，或者让LLM复制它从未直接训练过的文本需要什么。我想，大部分情况下，许多文本包含自然与模型学习的语言关系相一致的部分。如果是这样，那么也许我可以使用模型来推断这些关系，并在它偏离时纠正它的行为。
+- en: So that's how I got here.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这就是我到这里的方式。
+- en: To see if this would work, I decided to use technology that I am familiar with.
+    I'll use [llama.cpp](https://github.com/ggerganov/llama.cpp) via its [python bindings](https://github.com/abetlen/llama-cpp-python).
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 要看看这是否起作用，我决定使用我熟悉的技术。我将通过其[python绑定](https://github.com/abetlen/llama-cpp-python)使用[llama.cpp](https://github.com/ggerganov/llama.cpp)。
+- en: How it Works...
+  id: totrans-11
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 工作原理...
+- en: 'The solution I put together has the following key functions:'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我组装的解决方案具有以下关键功能：
+- en: '**`load_document(filename)`**:'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**`load_document(filename)`**：'
+- en: This reads a text file and tokenizes it using the model's tokenizer. If the
+    text is too long for the model's context window, it is split into smaller parts
+    that fit within this window. This prevents token overflow.
+  id: totrans-14
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 这会读取文本文件并使用模型的分词器对其进行分词。如果文本过长以至于超出模型的上下文窗口，它将被分成适合该窗口的更小部分。这可以防止标记溢出。
+- en: '**`generate_text(prompt, max_tokens=1)`**:'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**`generate_text(prompt, max_tokens=1)`**：'
+- en: This generates text, n tokens at a time, with 0.0 as the temperature and a static
+    seed. It essentially continues the text from where the input text stopped.
+  id: totrans-16
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 这使用0.0作为温度和一个固定的种子，以n个标记一次生成文本。它基本上从输入文本停止的地方继续文本。
+- en: '**`compress_text(source_text)`**:'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**`compress_text(source_text)`**：'
+- en: This function attempts to compress the input text by generating parts of it
+    using the LLM. If the generated text matches the start of the source text, it
+    continues– otherwise, it adds the character directly to the compressed string.
+  id: totrans-18
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 此函数尝试使用LLM生成输入文本的部分来压缩它。如果生成的文本与源文本的开头匹配，则继续进行 - 否则，它直接将字符添加到压缩字符串中。
+- en: To record the generated text, the function notes how many tokens were generated
+    and places that number between a delimiter.
+  id: totrans-19
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 为了记录生成的文本，函数记录了生成了多少标记，并将该数字放置在分隔符之间。
+- en: '**`decompress_text(compressed_text)`**:'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**`decompress_text(compressed_text)`**：'
+- en: Decompresses text compressed by the `compress_text` function. It splits the
+    text using the delimiter and reconstructs the original text by generating missing
+    parts or directly appending the text.
+  id: totrans-21
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 解压由`compress_text`函数压缩的文本。它使用分隔符分割文本，并通过生成缺失部分或直接附加文本来重建原始文本。
+- en: Testing
+  id: totrans-22
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 测试
+- en: I used two texts for test. For the first, I decided to use the first chapter
+    of "[Alice's Adventures in Wonderland](https://www.gutenberg.org/cache/epub/11/pg11.txt)"
+    as I assumed it would be in the model's training data. As I expected, I got very
+    good compression.
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我用两个文本进行测试。对于第一个，我决定使用《[爱丽丝梦游仙境](https://www.gutenberg.org/cache/epub/11/pg11.txt)》的第一章，因为我假设它会在模型的训练数据中。正如我预料的那样，我得到了非常好的压缩。
+- en: Compression
+  id: totrans-24
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 压缩
+- en: 'Here''s the meat of the compression function:'
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是压缩函数的核心：
+- en: Code
+  id: totrans-26
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+  zh: 代码
+- en: '[PRE0]'
+  id: totrans-27
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE0]'
+- en: Results
+  id: totrans-28
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+  zh: 结果
+- en: Here's the model processing the script. The text in blue matches text generated
+    by the LLM and white is from the source text. Yes, it's slow.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是模型处理脚本的过程。蓝色的文本是由LLM生成的，白色的文本是源文本。是的，速度很慢。
+- en: '![](img/9a65fa3e7fb86190640f4e6f4727f4b2.png)'
+  id: totrans-30
+  prefs: []
+  type: TYPE_IMG
+  zh: '![](img/9a65fa3e7fb86190640f4e6f4727f4b2.png)'
+- en: 'The "Compressed" content:'
+  id: totrans-31
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: “压缩”内容：
+- en: 'Here''s what the output looks like. Yes, it''s in JSON format and yes it''s
+    ugly, but this is just a proof of concept, right? For the sake of clarity in this
+    post, I picked an easy-to-read delimiter: @'
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是输出的样子。是的，它是以JSON格式呈现的，而且是丑陋的，但这只是一个概念验证，对吧？为了在这篇帖子中更加清晰，我选择了一个易于阅读的分隔符：@
+- en: This is the complete "compressed" text of Chapter 1.
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是第一章的完整“压缩”文本。
+- en: '[PRE1]'
+  id: totrans-34
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE1]'
+- en: 11,994 to 986 Characters
+  id: totrans-35
+  prefs:
+  - PREF_H6
+  type: TYPE_NORMAL
+  zh: 11,994到986个字符
+- en: Wow, that's a pretty big reduction. The compressed text is only about 8% of
+    the original size.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 哇，这减少的量相当大。压缩后的文本仅为原始大小的约8%。
+- en: For fun, I compressed the [whole file](https://www.gutenberg.org/cache/epub/11/pg11.txt).
+    This method reduced the number of characters from 174,355 to 25,360 - the compressed
+    text being 15% of the original.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了好玩，我压缩了[整个文件](https://www.gutenberg.org/cache/epub/11/pg11.txt)。这种方法将字符数从174,355减少到25,360
+    - 压缩后的文本占原始文本的15%。
+- en: Decompression
+  id: totrans-38
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 解压缩
+- en: 'Compression is pointless if I can''t reverse it. Let''s look at the decompress
+    function:'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果我不能反向压缩，那么压缩就毫无意义。让我们来看看解压缩函数：
+- en: Code
+  id: totrans-40
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+  zh: 代码
+- en: '[PRE2]'
+  id: totrans-41
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE2]'
+- en: Results
+  id: totrans-42
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+  zh: 结果
+- en: '![](img/95e0ef662ac6e9ab523a1ca86237cfb8.png)'
+  id: totrans-43
+  prefs: []
+  type: TYPE_IMG
+  zh: '![](img/95e0ef662ac6e9ab523a1ca86237cfb8.png)'
+- en: It works!
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它有效了！
+- en: One more thing
+  id: totrans-45
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 还有一件事
+- en: I don't know how well this will perform across different GPUs, as I've heard
+    that outputs could vary. While I don't have the ability to test this, I confirmed
+    that the results were consistent between a GPU and a CPU.
+  id: totrans-46
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我不知道这个在不同GPU上的表现如何，因为我听说输出可能会有所不同。虽然我没有测试这个的能力，但我确认结果在GPU和CPU之间是一致的。
+- en: I haven't gotten around to uploading the script to Github. Once I do, I'll post
+    it here.
+  id: totrans-47
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我还没有把脚本上传到Github。一旦我上传了，我会在这里发布。
+- en: 'Here''s a draft version of this post, compressed:'
+  id: totrans-48
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 这是这篇帖子的一个草稿版本，经过压缩：
+- en: '[PRE3]'
+  id: totrans-49
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE3]'
+- en: 3,436 to 2,691 Characters
+  id: totrans-50
+  prefs:
+  - PREF_H6
+  type: TYPE_NORMAL
+  zh: 3,436到2,691个字符
+- en: As expected, the method performs better better on data that the model has been
+    trained on, but there's still some reduction in size.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如预期的那样，该方法在模型已经训练过的数据上表现更好，但仍然会有一些大小的减少。
+- en: Thoughts
+  id: totrans-52
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 想法
+- en: The model is huge
+  id: totrans-53
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 这个模型很庞大
+- en: Would it practical to train a model for the purpose of compression?
+  id: totrans-54
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 训练一个用于压缩目的的模型是否实用？
+- en: Could this method be used to identify any data that was used to train a model?
+  id: totrans-55
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 这种方法能用于识别任何用于训练模型的数据吗？
+- en: Do different models yield better results?
+  id: totrans-56
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 不同的模型是否会产生更好的结果？
+- en: Can this be extended to other data types, like images?
+  id: totrans-57
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 这个方法能扩展到其他数据类型吗，比如图片？
+- en: Code
+  id: totrans-58
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 代码
+- en: '[A demonstration of https://o565.com/llm-text-compression/'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[演示 https://o565.com/llm-text-compression/'
+- en: A demonstration of https://o565.com/llm-text-compression/ - llm_compression.py](https://gist.github.com/0xDigest/67149a385762b57810323ba4e1669ae2)
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[演示 https://o565.com/llm-text-compression/ - llm_compression.py](https://gist.github.com/0xDigest/67149a385762b57810323ba4e1669ae2)'

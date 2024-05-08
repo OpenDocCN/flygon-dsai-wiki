@@ -1,0 +1,379 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: 大模型'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：大模型
+- en: 'date: 2024-05-08 10:27:22'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 'date: 2024-05-08 10:27:22'
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: 'Simulating Personality: Control Vectors + Grammar'
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 模拟人格：控制向量 + 语法
+- en: 来源：[https://o565.com/control-vectors-grammar/](https://o565.com/control-vectors-grammar/)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://o565.com/control-vectors-grammar/](https://o565.com/control-vectors-grammar/)
+- en: 'I was first exposed to the concept of control vectors through Theia Vogel''s
+    "[Representation Engineering Mistral-7B an Acid Trip](https://vgel.me/posts/representation-engineering/)".
+    The author does a good job of breaking down the concepts from the [Representation
+    Engineering: A Top-Down Approach to AI Transparency](https://arxiv.org/abs/2310.01405)
+    so if you haven''t seen either, they''re worth a read.'
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '我第一次接触到控制向量的概念是通过 Theia Vogel 的 “[Representation Engineering Mistral-7B an
+    Acid Trip](https://vgel.me/posts/representation-engineering/)”。作者很好地从 [Representation
+    Engineering: A Top-Down Approach to AI Transparency](https://arxiv.org/abs/2310.01405)
+    中分解了这些概念，所以如果你还没有看过其中任何一篇，那么它们值得一读。'
+- en: The idea of using "control vectors" to influence text generation using concepts
+    like happiness or laziness tickled my brain and lead me to wonder if we could
+    simulate personality traits using control vectors- and if so, would these traits
+    be reflected in a personality test?
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用“控制向量”来影响文本生成的想法，使用像快乐或懒惰这样的概念刺激了我的大脑，使我想知道我们是否可以使用控制向量来模拟人格特质- 如果可以的话，这些特质是否会在人格测试中反映出来？
+- en: 'A brief disclaimer: I am no expert. What follows is a hobby project which gives
+    a high-level demonstration of control vectors using llama-cpp-python. My primary
+    purpose in writing this is to document what I''ve learned and force me to think
+    through (and finish) the solution.'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一个简短的免责声明：我不是专家。以下是一个业余项目，通过使用 llama-cpp-python 高层次地演示了控制向量。我撰写这篇文章的主要目的是记录我所学到的东西，并迫使我思考（并完成）解决方案。
+- en: Okay- let's get started.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 好的- 让我们开始吧。
+- en: Minting Control Vectors
+  id: totrans-10
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: '**Minting Control Vectors**'
+- en: In the article mentioned above, the author introduced a library, [repeng](https://github.com/vgel/repeng),
+    which makes creating control vectors easy. To make a control vector we need some
+    contrasting data to train the model.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在上述提到的文章中，作者介绍了一个库，[repeng](https://github.com/vgel/repeng)，它使得创建控制向量变得简单。为了创建一个控制向量，我们需要一些对比数据来训练模型。
+- en: The Personality Test
+  id: totrans-12
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 人格测试
+- en: 'For the personality test, I picked the Big Five flavor which measures a person''s
+    personality using 5 traits. I selected this one because the test includes contrasting
+    traits which seemed ideal for this experiment. These are (via [Wikipedia](https://en.wikipedia.org/wiki/Big_Five_personality_traits)):'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于人格测试，我选择了衡量一个人的个性的五大特征。我选择了这个测试，因为该测试包括了对比的特质，这对这个实验似乎是理想的。这些是（通过 [Wikipedia](https://en.wikipedia.org/wiki/Big_Five_personality_traits)）：
+- en: openness to experience (inventive/curious vs. consistent/cautious)
+  id: totrans-14
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 开放性经验（富有创造力/好奇心 vs. 一贯/谨慎）
+- en: conscientiousness (efficient/organized vs. extravagant/careless)
+  id: totrans-15
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 尽责性（高效/有条理 vs. 浪费/粗心）
+- en: extraversion (outgoing/energetic vs. solitary/reserved)
+  id: totrans-16
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 外向性（外向/充满活力 vs. 内向/沉默寡言）
+- en: agreeableness (friendly/compassionate vs. critical/judgmental)
+  id: totrans-17
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: agreeableness (友好/富有同情心 vs. 批判/判断)
+- en: neuroticism (sensitive/nervous vs. resilient/confident)
+  id: totrans-18
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 神经质（敏感/紧张 vs. 坚韧/自信）
+- en: 'I used ChatGPT to speed up making the training datasets. Here''s an example
+    of some contrasting data used for ''conscientiousness'':'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我使用 ChatGPT 来加速制作训练数据集。以下是用于“尽责”的一些对比数据的示例：
+- en: '**Positive**: diligent, always meticulously attending to your tasks and responsibilities
+    with great care, leaving no detail overlooked'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**积极**：勤奋，始终细心地对待你的任务和责任，不放过任何细节'
+- en: '**Negative**: negligent, always neglecting your duties or being careless, leading
+    to mistakes and oversights that could have been avoided'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**消极**：疏忽，总是忽视你的职责或粗心大意，导致可以避免的错误和疏忽'
+- en: 'And the resulting training data used by the repeng training script becomes:'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 而 repeng 训练脚本使用的结果训练数据变为：
+- en: '[PRE0]'
+  id: totrans-23
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE0]'
+- en: Training
+  id: totrans-24
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: Training
+- en: Check out the [repeng](https://github.com/vgel/repeng) repo for an example of
+    training the control vector.
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 看看 [repeng](https://github.com/vgel/repeng) 仓库，了解训练控制向量的示例。
+- en: 'One note- saving the gguf vector is not shown in the main example. We''ll need
+    this to use the vector in llama.cpp. To save the vector simply call export_gguf
+    like so:'
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一个注意事项- 在主要示例中没有显示保存 gguf 向量的步骤。我们将需要这个向量来在 llama.cpp 中使用。要保存向量，只需调用 export_gguf，如下所示：
+- en: '[PRE1]'
+  id: totrans-27
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE1]'
+- en: Using Control Vectors
+  id: totrans-28
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 使用控制向量
+- en: 'Not long ago, control vectors were added to llama.cpp, so let''s use that.
+    It''s as simple as installing the tool and running the command:'
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 不久前，控制向量被添加到了 llama.cpp，所以让我们使用它。安装工具并运行命令就像简单一样：
+- en: Negative
+  id: totrans-30
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 消极
+- en: '[PRE2]'
+  id: totrans-31
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE2]'
+- en: Positive
+  id: totrans-32
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: Positive
+- en: '[PRE3]'
+  id: totrans-33
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE3]'
+- en: llama-cpp-python Integration
+  id: totrans-34
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: llama-cpp-python 集成
+- en: So looks like it's working! Now, to use this for a personality test, we'll want
+    to script the assessment. For this I usually use the python bindings in [llama-cpp-python](https://github.com/abetlen/llama-cpp-python).
+    However, it doesn't look like control vectors have been fully implemented there
+    yet.
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 看起来它正在工作！现在，要用来进行个性测试，我们需要将评估脚本化。在这种情况下，我通常使用 [llama-cpp-python](https://github.com/abetlen/llama-cpp-python)
+    中的 python 绑定。然而，看起来控制向量在那里还没有完全实现。
+- en: No worries, we'll figure it out.  Looking at the source, we see that there is
+    one reference to control vectors in the function [llama_control_vector_apply](https://github.com/abetlen/llama-cpp-python/blob/main/llama_cpp/llama_cpp.py#L1293).
+    This function is accessible! We should be able to use the low-level API to access
+    it.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 别担心，我们会弄清楚的。看着源代码，我们看到在 [llama_cpython/llama_cpp.py#L1293](https://github.com/abetlen/llama-cpp-python/blob/main/llama_cpp/llama_cpp.py#L1293)
+    函数中有一个对控制向量的引用。这个函数是可以访问的！我们应该能够使用低级 API 来访问它。
+- en: 'As one would expect, the function mirrors the function in llama_cpp. This function
+    applied the loaded control vector data and applies it to the context of the loaded
+    model. There is one missing element though that''s called out in the comments:'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 正如人们所期望的那样，该函数与llama_cpp中的函数相对应。该函数应用了加载的控制向量数据，并将其应用于加载的模型的上下文。不过还有一个缺失的元素，在评论中有提到：
+- en: '[PRE4]'
+  id: totrans-38
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE4]'
+- en: You can find that code [here](https://github.com/ggerganov/llama.cpp/blob/master/common/common.cpp#L2637).
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你可以在 [这里](https://github.com/ggerganov/llama.cpp/blob/master/common/common.cpp#L2637)
+    找到该代码。
+- en: It looks like the code that loads the vector isn't available in the low-level
+    API. Checking the makefile, it looks like common isn't linked in the shared library.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 看起来加载向量的代码在低级 API 中并不可用。检查 makefile，看起来 common 没有链接到共享库中。
+- en: 'So we will consider two options:'
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 因此，我们将考虑两个选项：
+- en: Link common.o and required dependencies to libllama.so and write new python
+    bindings.
+  id: totrans-42
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 将 common.o 和必需的依赖项链接到 libllama.so 并编写新的 python 绑定。
+- en: Recreate the loading logic in python
+  id: totrans-43
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 用 python 重新创建加载逻辑
+- en: 'I ultimately decided to use recreate the control vector load logic in Python
+    for a few reasons:'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我最终决定用 Python 重新创建控制向量的加载逻辑，出于几个原因：
+- en: I've never written code to bind Python to c++
+  id: totrans-45
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我从未写过将Python绑定到c++的代码
+- en: I would have to re-make libllama.so each time I wanted to use control vectors
+    (until someone smarter than me builds proper integration)
+  id: totrans-46
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我每次想使用控制向量时都必须重新制作 libllama.so（直到有人比我更聪明地构建了适当的集成）
+- en: I tried and gave up
+  id: totrans-47
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我尝试过并放弃了
+- en: Python llama_control_vector_load replacement
+  id: totrans-48
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: Python llama_control_vector_load 替代
+- en: '[PRE5]'
+  id: totrans-49
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE5]'
+- en: Test Script
+  id: totrans-50
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 测试脚本
+- en: 'I originally wrote the entire script just using the low-level API, but I finally
+    settled on a hybrid:'
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最初，我只是使用低级 API 编写整个脚本，但最终我采用了混合方式：
+- en: '[PRE6]'
+  id: totrans-52
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE6]'
+- en: Results (Agreeable +/- 1)
+  id: totrans-53
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 结果（可接受 +/- 1）
+- en: Positive
+  id: totrans-54
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 正面
+- en: '[PRE7]'
+  id: totrans-55
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE7]'
+- en: Negative
+  id: totrans-56
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 负面
+- en: '[PRE8]'
+  id: totrans-57
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE8]'
+- en: It's working!
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它正在工作！
+- en: The Test
+  id: totrans-59
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 测试
+- en: 'Next, I''m going to tie everything together and use the python library: [five-factor-e](https://github.com/NeuroQuestAi/five-factor-e)
+    to administer a personality test using ReAct-inspired prompting and [grammar](https://github.com/ggerganov/llama.cpp/blob/master/grammars/README.md)
+    to constrain the output of the model to a set of predictable responses .'
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 接下来，我将把所有东西联系起来，使用 python 库：[five-factor-e](https://github.com/NeuroQuestAi/five-factor-e)
+    来进行一项个性测试，使用 ReAct-灵感提示和 [grammars](https://github.com/ggerganov/llama.cpp/blob/master/grammars/README.md)
+    限制模型输出到一组可预测的响应。
+- en: More to come.
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 还会有更多内容。
