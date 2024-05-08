@@ -53,9 +53,8 @@
     +   [Kaggle word2vec NLP 教程：第三部分：词向量的更多乐趣](docs/Kaggle-word2vec-NLP-%E6%95%99%E7%A8%8B%EF%BC%9A%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9A%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E6%9B%B4%E5%A4%9A%E4%B9%90%E8%B6%A3.md)
     +   [Kaggle word2vec NLP 教程：第二部分：词向量](docs/Kaggle-word2vec-NLP-%E6%95%99%E7%A8%8B%EF%BC%9A%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E8%AF%8D%E5%90%91%E9%87%8F.md)
     +   [如何在 Kaggle 首战中进入前 10%](docs/%E5%A6%82%E4%BD%95%E5%9C%A8-Kaggle-%E9%A6%96%E6%88%98%E4%B8%AD%E8%BF%9B%E5%85%A5%E5%89%8D-10%25.md)
-+   未分类
++   机器学习
     +   [2024 年的机器反学习](docs/Machine-Unlearning-in-2024---Ken-Ziyu-Liu---Stanford-Computer-Science.md)
-    +   [【Yolov5】1.认真总结6000字Yolov5保姆级教程[通俗易懂] - 腾讯云开发者社区-腾讯云](docs/%E3%80%90Yolov5%E3%80%911.%E8%AE%A4%E7%9C%9F%E6%80%BB%E7%BB%936000%E5%AD%97Yolov5%E4%BF%9D%E5%A7%86%E7%BA%A7%E6%95%99%E7%A8%8B%5B%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%5D---%E8%85%BE%E8%AE%AF%E4%BA%91%E5%BC%80%E5%8F%91%E8%80%85%E7%A4%BE%E5%8C%BA-%E8%85%BE%E8%AE%AF%E4%BA%91.md)
 +   Pandas
     +   [Pandas 秘籍](docs/Pandas-%E7%A7%98%E7%B1%8D.md)
     +   [十分钟搞定 pandas](docs/%E5%8D%81%E5%88%86%E9%92%9F%E6%90%9E%E5%AE%9A-pandas.md)
@@ -67,6 +66,8 @@
     +   [矩阵求导术（下）](docs/%E7%9F%A9%E9%98%B5%E6%B1%82%E5%AF%BC%E6%9C%AF%EF%BC%88%E4%B8%8B%EF%BC%89.md)
 +   Matplotlib
     +   [Rougier 的 Matplotlib 教程](docs/Rougier-%E7%9A%84-Matplotlib-%E6%95%99%E7%A8%8B.md)
++   未分类
+    +   [【Yolov5】1.认真总结6000字Yolov5保姆级教程[通俗易懂] - 腾讯云开发者社区-腾讯云](docs/%E3%80%90Yolov5%E3%80%911.%E8%AE%A4%E7%9C%9F%E6%80%BB%E7%BB%936000%E5%AD%97Yolov5%E4%BF%9D%E5%A7%86%E7%BA%A7%E6%95%99%E7%A8%8B%5B%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%5D---%E8%85%BE%E8%AE%AF%E4%BA%91%E5%BC%80%E5%8F%91%E8%80%85%E7%A4%BE%E5%8C%BA-%E8%85%BE%E8%AE%AF%E4%BA%91.md)
 +   Keras
     +   [使用 Python 和 Keras 逐步开发你的第一个神经网络](docs/%E4%BD%BF%E7%94%A8_Python_%E5%92%8C_Keras_%E9%80%90%E6%AD%A5%E5%BC%80%E5%8F%91%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
 +   Quant
