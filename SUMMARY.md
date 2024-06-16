@@ -61,6 +61,7 @@
 +   大模型
     +   [LLM4Decompile：用大型语言模型反编译二进制代码](docs/LLM4Decompile%EF%BC%9A%E7%94%A8%E5%A4%A7%E5%9E%8B%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%8F%8D%E7%BC%96%E8%AF%91%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%BB%A3%E7%A0%81.md)
     +   [PokéLLMon：一款用于 Pokémon 战斗的基于大型语言模型的人类水平代理](docs/Pok%C3%A9LLMon%EF%BC%9A%E4%B8%80%E6%AC%BE%E7%94%A8%E4%BA%8E+Pok%C3%A9mon+%E6%88%98%E6%96%97%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%A4%A7%E5%9E%8B%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BA%BA%E7%B1%BB%E6%B0%B4%E5%B9%B3%E4%BB%A3%E7%90%86.md)
+    +   [[论文解读] LLM角色扮演论文浅析](docs/%5B%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB%5D+LLM%E8%A7%92%E8%89%B2%E6%89%AE%E6%BC%94%E8%AE%BA%E6%96%87%E6%B5%85%E6%9E%90.md)
     +   [使用（滥用）LLM 压缩文本](docs/%E4%BD%BF%E7%94%A8-%E6%BB%A5%E7%94%A8-LLM-%E5%8E%8B%E7%BC%A9%E6%96%87%E6%9C%AC.md)
     +   [模拟人格：控制向量 + 语法](docs/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E6%A0%BC-%E6%8E%A7%E5%88%B6%E5%90%91%E9%87%8F---%E8%AF%AD%E6%B3%95.md)
 +   Pandas
