@@ -36,6 +36,7 @@
     +   [题目：用于语义分割的全卷积网络](docs/%E9%A2%98%E7%9B%AE-%E7%94%A8%E4%BA%8E%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2%E7%9A%84%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C.md)
 +   未分类
     +   [【Yolov5】1.认真总结6000字Yolov5保姆级教程[通俗易懂] - 腾讯云开发者社区-腾讯云](docs/-Yolov5-1-%E8%AE%A4%E7%9C%9F%E6%80%BB%E7%BB%936000%E5%AD%97Yolov5%E4%BF%9D%E5%A7%86%E7%BA%A7%E6%95%99%E7%A8%8B-%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82----%E8%85%BE%E8%AE%AF%E4%BA%91%E5%BC%80%E5%8F%91%E8%80%85%E7%A4%BE%E5%8C%BA-%E8%85%BE%E8%AE%AF%E4%BA%91.md)
+    +   [使用 LLM，将任何文本语料库转化为知识图谱](docs/%E4%BD%BF%E7%94%A8+LLM%EF%BC%8C%E5%B0%86%E4%BB%BB%E4%BD%95%E6%96%87%E6%9C%AC%E8%AF%AD%E6%96%99%E5%BA%93%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1.md)
 +   机器学习
     +   [2024 年的机器反学习](docs/2024-%E5%B9%B4%E7%9A%84%E6%9C%BA%E5%99%A8%E5%8F%8D%E5%AD%A6%E4%B9%A0.md)
 +   面试
