@@ -58,6 +58,11 @@
     +   [Kaggle word2vec NLP 教程：第三部分：词向量的更多乐趣](docs/Kaggle-word2vec-NLP-%E6%95%99%E7%A8%8B-%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86-%E8%AF%8D%E5%90%91%E9%87%8F%E7%9A%84%E6%9B%B4%E5%A4%9A%E4%B9%90%E8%B6%A3.md)
     +   [Kaggle word2vec NLP 教程：第二部分：词向量](docs/Kaggle-word2vec-NLP-%E6%95%99%E7%A8%8B-%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86-%E8%AF%8D%E5%90%91%E9%87%8F.md)
     +   [如何在 Kaggle 首战中进入前 10%](docs/%E5%A6%82%E4%BD%95%E5%9C%A8-Kaggle-%E9%A6%96%E6%88%98%E4%B8%AD%E8%BF%9B%E5%85%A5%E5%89%8D-10-.md)
++   大模型
+    +   [LLM4Decompile：用大型语言模型反编译二进制代码](docs/LLM4Decompile%EF%BC%9A%E7%94%A8%E5%A4%A7%E5%9E%8B%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%8F%8D%E7%BC%96%E8%AF%91%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%BB%A3%E7%A0%81.md)
+    +   [PokéLLMon：一款用于 Pokémon 战斗的基于大型语言模型的人类水平代理](docs/Pok%C3%A9LLMon%EF%BC%9A%E4%B8%80%E6%AC%BE%E7%94%A8%E4%BA%8E+Pok%C3%A9mon+%E6%88%98%E6%96%97%E7%9A%84%E5%9F%BA%E4%BA%8E%E5%A4%A7%E5%9E%8B%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BA%BA%E7%B1%BB%E6%B0%B4%E5%B9%B3%E4%BB%A3%E7%90%86.md)
+    +   [使用（滥用）LLM 压缩文本](docs/%E4%BD%BF%E7%94%A8-%E6%BB%A5%E7%94%A8-LLM-%E5%8E%8B%E7%BC%A9%E6%96%87%E6%9C%AC.md)
+    +   [模拟人格：控制向量 + 语法](docs/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E6%A0%BC-%E6%8E%A7%E5%88%B6%E5%90%91%E9%87%8F---%E8%AF%AD%E6%B3%95.md)
 +   Pandas
     +   [Pandas 秘籍](docs/Pandas-%E7%A7%98%E7%B1%8D.md)
     +   [十分钟搞定 pandas](docs/%E5%8D%81%E5%88%86%E9%92%9F%E6%90%9E%E5%AE%9A-pandas.md)
@@ -71,9 +76,6 @@
     +   [Rougier 的 Matplotlib 教程](docs/Rougier-%E7%9A%84-Matplotlib-%E6%95%99%E7%A8%8B.md)
 +   Keras
     +   [使用 Python 和 Keras 逐步开发你的第一个神经网络](docs/%E4%BD%BF%E7%94%A8-Python-%E5%92%8C-Keras-%E9%80%90%E6%AD%A5%E5%BC%80%E5%8F%91%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
-+   大模型
-    +   [使用（滥用）LLM 压缩文本](docs/%E4%BD%BF%E7%94%A8-%E6%BB%A5%E7%94%A8-LLM-%E5%8E%8B%E7%BC%A9%E6%96%87%E6%9C%AC.md)
-    +   [模拟人格：控制向量 + 语法](docs/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E6%A0%BC-%E6%8E%A7%E5%88%B6%E5%90%91%E9%87%8F---%E8%AF%AD%E6%B3%95.md)
 +   Quant
     +   [机器学习在金融中的应用：不应该使用LSTM预测股市的原因](docs/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9C%A8%E9%87%91%E8%9E%8D%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8-%E4%B8%8D%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8LSTM%E9%A2%84%E6%B5%8B%E8%82%A1%E5%B8%82%E7%9A%84%E5%8E%9F%E5%9B%A0.md)
     +   [自创数据集，使用TensorFlow预测股票入门](docs/%E8%87%AA%E5%88%9B%E6%95%B0%E6%8D%AE%E9%9B%86-%E4%BD%BF%E7%94%A8TensorFlow%E9%A2%84%E6%B5%8B%E8%82%A1%E7%A5%A8%E5%85%A5%E9%97%A8.md)
